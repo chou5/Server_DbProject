@@ -75,14 +75,15 @@ def queryPicnic():
 
     db = sqlite3.connect('picnic.db')
     c = db.cursor()
-    c.execute("SELECT item,quant FROM picnic")
+    c.execute("SELECT * FROM picnic")
     dataFromDB = c.fetchall()
     c.close()
     #print dataFromDB
 
     res = {
         'firstStrList': [dataFromDB[0][0],dataFromDB[0][1]],
-        'secondStrList': [dataFromDB[1][0],dataFromDB[1][1]]
+        'secondStrList': [dataFromDB[1][0],dataFromDB[1][1]],
+        'thirdStrList': [dataFromDB[2][0],dataFromDB[2][1]]
     }
     #print res
     
