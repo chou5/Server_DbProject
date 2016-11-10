@@ -89,6 +89,23 @@ def queryPicnic():
     
     return res
 
+# Response some messages in dictionary to client app
+@app.route('/sendForm', method=['OPTIONS', 'POST'])
+@enable_cors
+def sendForm():
+
+    print "Http Request /sendForm - input :"
+    print "==================================="
+    inputData = request.json
+    print inputData
+    print "==================================="
+
+    res = {
+        'message': "Hi, %s %s. You send this form successfully!" % (inputData['first_name'], inputData['last_name']),
+    }
+    
+    return res
+
 
 ''' Start the server '''
 try:
