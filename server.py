@@ -73,17 +73,16 @@ def queryPicnic():
     print request.json['description']
     print "==================================="
 
-    db = sqlite3.connect('picnic.db')
+    db = sqlite3.connect('flysheetDb.db')
     c = db.cursor()
-    c.execute("SELECT * FROM picnic")
+    c.execute("SELECT * FROM Employee")
     dataFromDB = c.fetchall()
     c.close()
     #print dataFromDB
 
     res = {
-        'firstStrList': [dataFromDB[0][0],dataFromDB[0][1]],
-        'secondStrList': [dataFromDB[1][0],dataFromDB[1][1]],
-        'thirdStrList': [dataFromDB[2][0],dataFromDB[2][1]]
+        'firstStrList': [dataFromDB[0][0],dataFromDB[0][1]]
+        
     }
     #print res
     
@@ -105,6 +104,33 @@ def sendForm():
     }
     
     return res
+
+
+@app.route('/sendCusForm', method=['OPTIONS', 'POST'])
+@enable_cors
+def sendCusForm():
+    print "Http Request /sendCusForm - input :"
+    print "==================================="
+    inputData = request.json
+    print inputData
+    print "==================================="
+    
+    info = "(" + "'" + inputData['cus_name'] + "'" + "," + "'" +inputData['cus_contact_person'] + "'" + ',' + "'" + inputData['cus_email'] + "'" + ',' + "'" + inputData['cus_phone'] + "'" + ',' + "'" + inputData['cus_address'] + "'" + ',' +  "'" + inputData['cus_region'] + "'" + ',' + inputData['cus_empId'] + ')'
+
+    print info
+    db = sqlite3.connect('flysheetDb.db')
+    c = db.cursor()
+    c.execute("INSERT INTO Customer(name,contact_person,email,phone,address,region,sales_person_id) VALUES " + info)
+    db.commit()
+
+    res ={
+      'message': "You send this form successfully!",
+    }
+
+    return res
+
+
+
 
 
 ''' Start the server '''
