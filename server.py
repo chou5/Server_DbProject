@@ -144,17 +144,13 @@ def runSQL():
 
     strings = inputData['sqlite_text'].split(';')
     db = sqlite3.connect('flysheetDb.db')
-    c = db.cursor()
+    #c = db.cursor()
     for string in strings:
-        #print string.lower()
-        if ('insert' in string.lower()) or ('update' in string.lower()) or ('delete' in string.lower()) or ('alter' in string.lower()) or ('drop' in string.lower()):
-            c.execute(string)
-            db.commit()     
-        elif 'select' in string.lower():
-            queryResult = c.execute(string)
-            #for row in queryResult:
-        else:
-            c.execute(string)
+        result = db.execute(string)
+        db.commit()
+        for row in result:
+            print row[0]
+            print row[1]
     db.close()
 
     res = {
@@ -162,8 +158,6 @@ def runSQL():
     }
 
     return res
-
-
 
 
 
