@@ -37,7 +37,7 @@ def hello():
 def show_picnic():
     db = sqlite3.connect('picnic.db')
     c = db.cursor()
-    c.execute("SELECT item,quant FROM picnic")
+    c.execute("SELECT item,quant FROM picnic;")
     data = c.fetchone()
     c.close()
     print data
@@ -75,7 +75,7 @@ def queryPicnic():
 
     db = sqlite3.connect('flysheetDb.db')
     c = db.cursor()
-    c.execute("SELECT * FROM Employee")
+    c.execute("SELECT * FROM Employee;")
     dataFromDB = c.fetchall()
     c.close()
     #print dataFromDB
@@ -115,19 +115,55 @@ def sendCusForm():
     print inputData
     print "==================================="
     
-    info = "(" + "'" + inputData['cus_name'] + "'" + "," + "'" +inputData['cus_contact_person'] + "'" + ',' + "'" + inputData['cus_email'] + "'" + ',' + "'" + inputData['cus_phone'] + "'" + ',' + "'" + inputData['cus_address'] + "'" + ',' +  "'" + inputData['cus_region'] + "'" + ',' + inputData['cus_empId'] + ')'
+    #info = "(" + "'" + inputData['cus_name'] + "'" + "," + "'" +inputData['cus_contact_person'] + "'" + ',' + "'" + inputData['cus_email'] + "'" + ',' + "'" + inputData['cus_phone'] + "'" + ',' + "'" + inputData['cus_address'] + "'" + ',' +  "'" + inputData['cus_region'] + "'" + ',' + inputData['cus_empId'] + ')'
+    #print info
 
-    print info
     db = sqlite3.connect('flysheetDb.db')
     c = db.cursor()
-    c.execute("INSERT INTO Customer(name,contact_person,email,phone,address,region,sales_person_id) VALUES " + info)
+    c.execute('''INSERT INTO Customer(name,contact_person,email,phone,address,region,sales_person_id) VALUES (:cus_name, :cus_contact_person, :cus_email, :cus_phone, :cus_address, :cus_region, :cus_empId);''', inputData)
+    #c.execute("INSERT INTO Customer(name,contact_person,email,phone,address,region,sales_person_id) VALUES " + info)
     db.commit()
+    db.close()
 
     res ={
       'message': "You send this form successfully!",
     }
 
     return res
+
+
+
+@app.route('/runSQL', method=['OPTIONS', 'POST'])
+@enable_cors
+def runSQL():
+    print "Http Request /runSQL - input :"
+    print "==================================="
+    inputData = request.json
+    print inputData
+    print "==================================="
+
+    strings = inputData['sqlite_text'].split(';')
+    db = sqlite3.connect('flysheetDb.db')
+    c = db.cursor()
+    for string in strings:
+        #print string.lower()
+        if ('insert' in string.lower()) or ('update' in string.lower()) or ('delete' in string.lower()) or ('alter' in string.lower()) or ('drop' in string.lower()):
+            c.execute(string)
+            db.commit()     
+        elif 'select' in string.lower():
+            queryResult = c.execute(string)
+            #for row in queryResult:
+        else:
+            c.execute(string)
+    db.close()
+
+    res = {
+           'message': "You run the script successfully!"
+    }
+
+    return res
+
+
 
 
 
