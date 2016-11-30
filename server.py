@@ -148,9 +148,7 @@ def runSQL():
     for string in strings:
         result = db.execute(string)
         db.commit()
-        for row in result:
-            print row[0]
-            print row[1]
+        print result.__dict__
     db.close()
 
     res = {
