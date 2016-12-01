@@ -161,7 +161,9 @@ def runSQL():
                     per_row[idx] = col
             result_list.append(per_row)
         print result_list
-        res.update({'result': result_list})
+        res.update({'table': result_list})
+    else: 
+        res.update({'notice': "You have made changes to the database. Rows affected: 1"})
     db.commit()
     db.close()
 
