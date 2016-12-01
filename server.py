@@ -154,20 +154,24 @@ def runSQL():
     
     try:
         result = c.execute(inputData['sqlite_text'])
-        print result
+        #print result
 
-        res = {
-               'message': "You run the statement successfully!"
-        }
+        res.update({'message': "You run the statement successfully!"})
+        
         if 'select' in inputData['sqlite_text'].lower():
+            names = [description[0] for description in result.description]
             result_list = []
             for row in result:
-                per_row = {i: "" for i in range(len(row))}
-                for idx, col in enumerate(row):
-                    if per_row.has_key(idx):
-                        per_row[idx] = col
+                per_row = []
+                for col in row:
+                    per_row.append(col)
+                #per_row = {i: "" for i in range(len(row))}
+                #for idx, col in enumerate(row):
+                #    if per_row.has_key(idx):
+                #        per_row[idx] = col
                 result_list.append(per_row)
             print result_list
+            res.update({'table_name': names})
             res.update({'table': result_list})
         else:
             res.update({'notice': "You have made changes to the database. Rows affected: 1"})
