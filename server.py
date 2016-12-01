@@ -84,7 +84,6 @@ def queryPicnic():
         'firstStrList': [dataFromDB[0][0],dataFromDB[0][1]]
         
     }
-    #print res
     
     return res
 
@@ -142,18 +141,29 @@ def runSQL():
     print inputData
     print "==================================="
 
-    strings = inputData['sqlite_text'].split(';')
+    keyword = ';'
+    before, keyword, after = inputData['sqlite_text'].partition(keyword)
+    #if after != "":
+        #print "Characters found after end of SQLite statement"
+    #else:
     db = sqlite3.connect('flysheetDb.db')
-    #c = db.cursor()
-    for string in strings:
-        result = db.execute(string)
-        db.commit()
-        print result.__dict__
-    db.close()
-
+    c = db.cursor()
+    result = c.execute(inputData['sqlite_text'])
     res = {
-           'message': "You run the script successfully!"
+           'message': "You run the statement successfully!"
     }
+    if 'select' in inputData['sqlite_text'].lower():
+        result_list = []
+        for row in result:
+            per_row = {i: "" for i in range(len(row))}
+            for idx, col in enumerate(row):
+                if per_row.has_key(idx):
+                    per_row[idx] = col
+            result_list.append(per_row)
+        print result_list
+        res.update({'result': result_list})
+    db.commit()
+    db.close()
 
     return res
 
