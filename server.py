@@ -3,6 +3,7 @@ Tutorial : https://www.digitalocean.com/community/tutorials/how-to-use-the-bottl
 """
 
 import sqlite3, bottle
+from sqlite3 import OperationalError
 from bottle import route, run, template, response, request 
 
 
@@ -148,24 +149,36 @@ def runSQL():
     #else:
     db = sqlite3.connect('flysheetDb.db')
     c = db.cursor()
-    result = c.execute(inputData['sqlite_text'])
-    res = {
-           'message': "You run the statement successfully!"
-    }
-    if 'select' in inputData['sqlite_text'].lower():
-        result_list = []
-        for row in result:
-            per_row = {i: "" for i in range(len(row))}
-            for idx, col in enumerate(row):
-                if per_row.has_key(idx):
-                    per_row[idx] = col
-            result_list.append(per_row)
-        print result_list
-        res.update({'table': result_list})
-    else: 
-        res.update({'notice': "You have made changes to the database. Rows affected: 1"})
-    db.commit()
-    db.close()
+
+    res = {}
+    
+    try:
+        result = c.execute(inputData['sqlite_text'])
+        print result
+
+        res = {
+               'message': "You run the statement successfully!"
+        }
+        if 'select' in inputData['sqlite_text'].lower():
+            result_list = []
+            for row in result:
+                per_row = {i: "" for i in range(len(row))}
+                for idx, col in enumerate(row):
+                    if per_row.has_key(idx):
+                        per_row[idx] = col
+                result_list.append(per_row)
+            print result_list
+            res.update({'table': result_list})
+        else:
+            res.update({'notice': "You have made changes to the database. Rows affected: 1"})
+        db.commit()
+        db.close()
+
+    except OperationalError, e:
+        print "Error: %s" % e.args[0]
+        res.update({'message' : "Error: %s" % e.args[0]})
+        db.close()
+        return res
 
     return res
 
