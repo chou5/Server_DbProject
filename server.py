@@ -162,13 +162,10 @@ def runSQL():
             names = [description[0] for description in result.description]
             result_list = []
             for row in result:
-                per_row = []
-                for col in row:
-                    per_row.append(col)
-                #per_row = {i: "" for i in range(len(row))}
-                #for idx, col in enumerate(row):
-                #    if per_row.has_key(idx):
-                #        per_row[idx] = col
+                per_row = {i: "" for i in range(len(row))}
+                for idx, col in enumerate(row):
+                    if per_row.has_key(idx):
+                        per_row[idx] = col
                 result_list.append(per_row)
             print result_list
             res.update({'table_name': names})
