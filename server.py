@@ -142,11 +142,6 @@ def runSQL():
     print inputData
     print "==================================="
 
-    keyword = ';'
-    before, keyword, after = inputData['sqlite_text'].partition(keyword)
-    #if after != "":
-        #print "Characters found after end of SQLite statement"
-    #else:
     db = sqlite3.connect('flysheetDb.db')
     c = db.cursor()
 
@@ -154,22 +149,11 @@ def runSQL():
     
     try:
         result = c.execute(inputData['sqlite_text'])
-        #print result
-
         res.update({'message': "You run the statement successfully!"})
         
         if 'select' in inputData['sqlite_text'].lower():
-            names = [description[0] for description in result.description]
-            result_list = []
-            for row in result:
-                per_row = {i: "" for i in range(len(row))}
-                for idx, col in enumerate(row):
-                    if per_row.has_key(idx):
-                        per_row[idx] = col
-                result_list.append(per_row)
-            print result_list
-            res.update({'table_name': names})
-            res.update({'table': result_list})
+            result_dict = getResultTable(result)
+            res.update(result_dict)
         else:
             res.update({'notice': "You have made changes to the database. Rows affected: 1"})
         db.commit()
@@ -184,6 +168,41 @@ def runSQL():
     return res
 
 
+@app.route('/getAllCustomer', method=['OPTIONS', 'POST'])
+@enable_cors
+def getAllCustomer():
+    print "Http Request /getAllCustomer - input :"
+    print "==================================="
+    inputData = request.json
+    print "==================================="
+
+    res = {}
+
+    db = sqlite3.connect('flysheetDb.db')
+    c = db.cursor()
+    result = c.execute("SELECT * FROM Customer")
+    result_dict = getResultTable(result)
+    res.update(result_dict)
+    db.commit()
+    db.close()
+    return res
+
+def getResultTable(queryResult):
+    names = [description[0] for description in queryResult.description]
+    result_list = []
+    for row in queryResult:
+        per_row = {i: "" for i in range(len(row))}
+        for idx, col in enumerate(row):
+            if per_row.has_key(idx):
+                per_row[idx] = col
+        result_list.append(per_row)
+    row_num = len(result_list)
+    print result_list
+    result_dict = {'table': result_list,
+                   'table_num': row_num,
+                   'table_name': names}
+
+    return result_dict
 
 
 
