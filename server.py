@@ -6,7 +6,6 @@ import sqlite3, bottle
 from sqlite3 import OperationalError
 from bottle import route, run, template, response, request 
 
-
 """ Handle the CORS Issues """
 # the decorator
 def enable_cors(fn):
@@ -143,27 +142,53 @@ def runSQL():
     print "==================================="
 
     db = sqlite3.connect('flysheetDb.db')
-    c = db.cursor()
 
     res = {}
     
     try:
-        result = c.execute(inputData['sqlite_text'])
+        result = db.execute(inputData['sqlite_text'])
         res.update({'message': "You run the statement successfully!"})
         
         if 'select' in inputData['sqlite_text'].lower():
             result_dict = getResultTable(result)
             res.update(result_dict)
         else:
-            res.update({'notice': "You have made changes to the database. Rows affected: 1"})
+            #print db.total_changes
+            string = "You have made changes to the database. Rows affected: " + str(db.total_changes)
+            res.update({'notice': string})
         db.commit()
         db.close()
 
-    except OperationalError, e:
-        print "Error: %s" % e.args[0]
-        res.update({'message' : "Error: %s" % e.args[0]})
+    except sqlite3.OperationalError, o:
+        print "Error: %s" % o.args[0]
+        res.update({'message' : "Error: %s" % o.args[0]})
         db.close()
         return res
+
+    except sqlite3.Warning, w:
+        print "Error: %s" % w.args[0]
+        res.update({'message': "Warning: %s" % w.args[0]})
+        db.close()
+        return res
+
+    except sqlite3.DatabaseError, d:
+        print "Error: %s" % d.args[0]
+        res.update({'message' : "Error: %s" % d.args[0]})
+        db.close()
+        return res
+
+    except sqlite3.IntegrityError, i:
+        print "Error: %s" % i.args[0]
+        res.update({'message' : "Error: %s" % i.args[0]})
+        db.close()
+        return res
+
+    except sqlite3.ProgrammingError, p:
+        print "Error: %s" % p.args[0]
+        res.update({'message' : "Error: %s" % p.args[0]})
+        db.close()
+        return res
+
 
     return res
 
