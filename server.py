@@ -147,7 +147,7 @@ def runSQL():
     
     try:
         result = db.execute(inputData['sqlite_text'])
-        res.update({'message': "You run the statement successfully!"})
+        res.update({'success': "You run the statement successfully!"})
         
         if 'select' in inputData['sqlite_text'].lower():
             result_dict = getResultTable(result)
@@ -161,31 +161,31 @@ def runSQL():
 
     except sqlite3.OperationalError, o:
         print "Error: %s" % o.args[0]
-        res.update({'message' : "Error: %s" % o.args[0]})
+        res.update({'error' : "Error: %s" % o.args[0]})
         db.close()
         return res
 
     except sqlite3.Warning, w:
         print "Error: %s" % w.args[0]
-        res.update({'message': "Warning: %s" % w.args[0]})
+        res.update({'warning': "Warning: %s" % w.args[0]})
         db.close()
         return res
 
     except sqlite3.DatabaseError, d:
         print "Error: %s" % d.args[0]
-        res.update({'message' : "Error: %s" % d.args[0]})
+        res.update({'error' : "Error: %s" % d.args[0]})
         db.close()
         return res
 
     except sqlite3.IntegrityError, i:
         print "Error: %s" % i.args[0]
-        res.update({'message' : "Error: %s" % i.args[0]})
+        res.update({'error' : "Error: %s" % i.args[0]})
         db.close()
         return res
 
     except sqlite3.ProgrammingError, p:
         print "Error: %s" % p.args[0]
-        res.update({'message' : "Error: %s" % p.args[0]})
+        res.update({'error' : "Error: %s" % p.args[0]})
         db.close()
         return res
 
