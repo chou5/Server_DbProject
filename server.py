@@ -153,7 +153,6 @@ def runSQL():
             result_dict = getResultTable(result)
             res.update(result_dict)
         else:
-            #print db.total_changes
             string = "You have made changes to the database. Rows affected: " + str(db.total_changes)
             res.update({'notice': string})
         db.commit()
@@ -193,24 +192,83 @@ def runSQL():
     return res
 
 
-@app.route('/getAllCustomer', method=['OPTIONS', 'POST'])
+@app.route('/selectCus', method=['OPTIONS', 'POST'])
 @enable_cors
-def getAllCustomer():
-    print "Http Request /getAllCustomer - input :"
+def selectCus():
+    print "Http Request /selectCus - input :"
     print "==================================="
     inputData = request.json
     print "==================================="
 
-    res = {}
+    res = runSQL()
 
-    db = sqlite3.connect('flysheetDb.db')
-    c = db.cursor()
-    result = c.execute("SELECT * FROM Customer")
-    result_dict = getResultTable(result)
-    res.update(result_dict)
-    db.commit()
-    db.close()
     return res
+
+
+@app.route('/selectEmp', method=['OPTIONS', 'POST'])
+@enable_cors
+def selectEmp():
+    print "Http Request /selectEmp - input :"
+    print "==================================="
+    inputData = request.json
+    print "==================================="
+
+    res = runSQL()
+
+    return res
+
+
+@app.route('/selectPub', method=['OPTIONS', 'POST'])
+@enable_cors
+def selectPub():
+    print "Http Request /selectPub - input :"
+    print "==================================="
+    inputData = request.json
+    print "==================================="
+
+    res = runSQL()
+
+    return res
+
+
+@app.route('/selectProd', method=['OPTIONS', 'POST'])
+@enable_cors
+def selectProd():
+    print "Http Request /selectProd - input :"
+    print "==================================="
+    inputData = request.json
+    print "==================================="
+
+    res = runSQL()
+
+    return res
+
+
+@app.route('/selectOrd', method=['OPTIONS', 'POST'])
+@enable_cors
+def selectOrd():
+    print "Http Request /selectOrd - input :"
+    print "==================================="
+    inputData = request.json
+    print "==================================="
+
+    res = runSQL()
+
+    return res
+
+
+@app.route('/selectInv', method=['OPTIONS', 'POST'])
+@enable_cors
+def selectInv():
+    print "Http Request /selectInv - input :"
+    print "==================================="
+    inputData = request.json
+    print "==================================="
+
+    res = runSQL()
+
+    return res
+
 
 def getResultTable(queryResult):
     names = [description[0] for description in queryResult.description]
