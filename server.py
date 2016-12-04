@@ -278,7 +278,19 @@ def getRecords():
     inputData = request.json
     print "==================================="
 
-    res = {'cus': 3}
+    db = sqlite3.connect('flysheetDb.db')
+    res = {}
+    customer = db.execute('SELECT Count(*) FROM Customer').fetchone()[0]
+    employee = db.execute('SELECT Count(*) FROM Employee').fetchone()[0]
+    publisher = db.execute('SELECT Count(*) FROM Publisher').fetchone()[0]
+    orders = db.execute('SELECT Count(*) FROM Orders').fetchone()[0]
+    product = db.execute('SELECT Count(*) FROM Product').fetchone()[0]
+    invoice = db.execute('SELECT Count(*) FROM Invoice').fetchone()[0]
+
+    db.commit()
+    db.close()
+
+    res = {'cus': customer, 'emp': employee, 'pub': publisher, 'ord': orders, 'prod': product, 'inv': invoice}
 
     return res
 
