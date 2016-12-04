@@ -157,6 +157,7 @@ def runSQL():
             res.update({'notice': string})
         db.commit()
         db.close()
+        #getRecords()
 
     except sqlite3.OperationalError, o:
         print "Error: %s" % o.args[0]
