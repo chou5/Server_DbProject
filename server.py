@@ -270,6 +270,19 @@ def selectInv():
     return res
 
 
+@app.route('/getRecords', method=['OPTIONS', 'POST'])
+@enable_cors
+def getRecords():
+    print "Http Request /getRecords - input :"
+    print "==================================="
+    inputData = request.json
+    print "==================================="
+
+    res = {'cus': 3}
+
+    return res
+
+
 def getResultTable(queryResult):
     names = [description[0] for description in queryResult.description]
     result_list = []
@@ -286,7 +299,6 @@ def getResultTable(queryResult):
                    'table_name': names}
 
     return result_dict
-
 
 
 ''' Start the server '''
