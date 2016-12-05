@@ -281,7 +281,7 @@ def runSQL():
         
         if 'select' in inputData['sqlite_text'].lower():
             if 'view' in inputData['sqlite_text'].lower():
-                res.update({'notice':"No Results."})
+                res.update({'notice':"You have created a view in the database."})
             else:
                 result_dict = getResultTable(result)
                 res.update(result_dict)          
