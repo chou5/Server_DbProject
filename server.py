@@ -356,7 +356,19 @@ def getRecords():
             per_table.update({'record_num': getRecordNum})
             recordList.append(per_table)
 
-    res = {'records': recordList}
+    res = {'tables': recordList}
+
+    getViewName = db.execute("SELECT name FROM sqlite_master WHERE type='view' ORDER BY name").fetchall()
+    if len(getViewName) != 0:
+        viewList = []
+        for ele in getViewName:
+            if ele[0] != 'sqlite_sequence':
+                per_table = {'view_name': ele[0]}
+                string = 'SELECT Count(*) FROM ' + ele[0]
+                getRecordNum = db.execute(string).fetchone()[0]
+                per_table.update({'record_num': getRecordNum})
+                viewList.append(per_table)
+        res.update({'views': viewList})
 
     db.commit()
     db.close()
