@@ -323,75 +323,10 @@ def runSQL():
     return res
 
 
-@app.route('/selectCus', method=['OPTIONS', 'POST'])
+@app.route('/selectTableName', method=['OPTIONS', 'POST'])
 @enable_cors
-def selectCus():
-    print "Http Request /selectCus - input :"
-    print "==================================="
-    inputData = request.json
-    print "==================================="
-
-    res = runSQL()
-
-    return res
-
-
-@app.route('/selectEmp', method=['OPTIONS', 'POST'])
-@enable_cors
-def selectEmp():
+def selectTableName():
     print "Http Request /selectEmp - input :"
-    print "==================================="
-    inputData = request.json
-    print "==================================="
-
-    res = runSQL()
-
-    return res
-
-
-@app.route('/selectPub', method=['OPTIONS', 'POST'])
-@enable_cors
-def selectPub():
-    print "Http Request /selectPub - input :"
-    print "==================================="
-    inputData = request.json
-    print "==================================="
-
-    res = runSQL()
-
-    return res
-
-
-@app.route('/selectProd', method=['OPTIONS', 'POST'])
-@enable_cors
-def selectProd():
-    print "Http Request /selectProd - input :"
-    print "==================================="
-    inputData = request.json
-    print "==================================="
-
-    res = runSQL()
-
-    return res
-
-
-@app.route('/selectOrd', method=['OPTIONS', 'POST'])
-@enable_cors
-def selectOrd():
-    print "Http Request /selectOrd - input :"
-    print "==================================="
-    inputData = request.json
-    print "==================================="
-
-    res = runSQL()
-
-    return res
-
-
-@app.route('/selectInv', method=['OPTIONS', 'POST'])
-@enable_cors
-def selectInv():
-    print "Http Request /selectInv - input :"
     print "==================================="
     inputData = request.json
     print "==================================="
@@ -411,17 +346,20 @@ def getRecords():
 
     db = sqlite3.connect('flysheetDb.db')
     res = {}
-    customer = db.execute('SELECT Count(*) FROM Customer').fetchone()[0]
-    employee = db.execute('SELECT Count(*) FROM Employee').fetchone()[0]
-    publisher = db.execute('SELECT Count(*) FROM Publisher').fetchone()[0]
-    orders = db.execute('SELECT Count(*) FROM Orders').fetchone()[0]
-    product = db.execute('SELECT Count(*) FROM Product').fetchone()[0]
-    invoice = db.execute('SELECT Count(*) FROM Invoice').fetchone()[0]
+    recordList = []
+    getTableName = db.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name").fetchall()
+    for ele in getTableName:
+        if ele[0] != 'sqlite_sequence':
+            per_table = {'table_name': ele[0]}
+            string = 'SELECT Count(*) FROM ' + ele[0]
+            getRecordNum = db.execute(string).fetchone()[0]
+            per_table.update({'record_num': getRecordNum})
+            recordList.append(per_table)
+
+    res = {'records': recordList}
 
     db.commit()
     db.close()
-
-    res = {'cus': customer, 'emp': employee, 'pub': publisher, 'ord': orders, 'prod': product, 'inv': invoice}
 
     return res
 
@@ -436,7 +374,7 @@ def getResultTable(queryResult):
                 per_row[idx] = col
         result_list.append(per_row)
     row_num = len(result_list)
-    print result_list
+    #print result_list
     result_dict = {'table': result_list,
                    'table_num': row_num,
                    'table_name': names}
