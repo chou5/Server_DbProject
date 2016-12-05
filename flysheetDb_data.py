@@ -49,4 +49,13 @@ for idx, row in enumerate(publisher.rows):
 		del per_row[0]
 		db.execute('INSERT INTO Publisher(name, contact_person, country, phone, address, email, prod_specialist_id) VALUES (?,?,?,?,?,?,?)', tuple(per_row)) 
 
+orders = wb['ORDER']
+for idx, row in enumerate(orders.rows):
+	if idx != 0:
+		per_row = []
+		for cell in row:
+			per_row.append(cell.value)
+		del per_row[0]
+		db.execute('INSERT INTO Orders(prod_id, inv_id, amount, priceNTD, ord_date, sub_start_date, sub_end_date) VALUES (?,?,?,?,?,?,?)', tuple(per_row)) 
+
 db.commit()

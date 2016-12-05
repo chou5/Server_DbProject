@@ -131,6 +131,136 @@ def sendCusForm():
     return res
 
 
+@app.route('/sendEmpForm', method=['OPTIONS', 'POST'])
+@enable_cors
+def sendEmpForm():
+    print "Http Request /sendEmpForm - input :"
+    print "==================================="
+    inputData = request.json
+    print inputData
+    print "==================================="
+    
+    #info = "(" + "'" + inputData['cus_name'] + "'" + "," + "'" +inputData['cus_contact_person'] + "'" + ',' + "'" + inputData['cus_email'] + "'" + ',' + "'" + inputData['cus_phone'] + "'" + ',' + "'" + inputData['cus_address'] + "'" + ',' +  "'" + inputData['cus_region'] + "'" + ',' + inputData['cus_empId'] + ')'
+    #print info
+
+    db = sqlite3.connect('flysheetDb.db')
+    c = db.cursor()
+    c.execute('''INSERT INTO Employee(fname,lname,title,department,base_region,gender,dob,email,phone,start_date) VALUES (:emp_fname,:emp_lname,:emp_title,:emp_department,:emp_region,:emp_gender,:emp_dob,:emp_email,:emp_phone,:emp_startDate);''', inputData)
+    #c.execute("INSERT INTO Customer(name,contact_person,email,phone,address,region,sales_person_id) VALUES " + info)
+    db.commit()
+    db.close()
+
+    res ={
+      'message': "You send this form successfully!",
+    }
+
+    return res
+
+
+@app.route('/sendPubForm', method=['OPTIONS', 'POST'])
+@enable_cors
+def sendPubForm():
+    print "Http Request /sendPubForm - input :"
+    print "==================================="
+    inputData = request.json
+    print inputData
+    print "==================================="
+    
+    #info = "(" + "'" + inputData['cus_name'] + "'" + "," + "'" +inputData['cus_contact_person'] + "'" + ',' + "'" + inputData['cus_email'] + "'" + ',' + "'" + inputData['cus_phone'] + "'" + ',' + "'" + inputData['cus_address'] + "'" + ',' +  "'" + inputData['cus_region'] + "'" + ',' + inputData['cus_empId'] + ')'
+    #print info
+
+    db = sqlite3.connect('flysheetDb.db')
+    c = db.cursor()
+    c.execute('''INSERT INTO Publisher(name,contact_person,country,phone,address,email,prod_specialist_id) VALUES (:pub_name,:pub_contact_person,:pub_country,:pub_phone,:pub_address,:pub_email,:pub_empId);''', inputData)
+    #c.execute("INSERT INTO Customer(name,contact_person,email,phone,address,region,sales_person_id) VALUES " + info)
+    db.commit()
+    db.close()
+
+    res ={
+      'message': "You send this form successfully!",
+    }
+
+    return res
+
+
+@app.route('/sendProdForm', method=['OPTIONS', 'POST'])
+@enable_cors
+def sendProdForm():
+    print "Http Request /sendProdForm - input :"
+    print "==================================="
+    inputData = request.json
+    print inputData
+    print "==================================="
+    
+    #info = "(" + "'" + inputData['cus_name'] + "'" + "," + "'" +inputData['cus_contact_person'] + "'" + ',' + "'" + inputData['cus_email'] + "'" + ',' + "'" + inputData['cus_phone'] + "'" + ',' + "'" + inputData['cus_address'] + "'" + ',' +  "'" + inputData['cus_region'] + "'" + ',' + inputData['cus_empId'] + ')'
+    #print info
+
+    db = sqlite3.connect('flysheetDb.db')
+    c = db.cursor()
+    c.execute('''INSERT INTO Product(name,subscription_model,type,priceUSD,priceNTD,pub_id) VALUES (:prod_name,:prod_subModel,:prod_type,:prod_priceUSD,:prod_priceNTD,:prod_pubId);''', inputData)
+    #c.execute("INSERT INTO Customer(name,contact_person,email,phone,address,region,sales_person_id) VALUES " + info)
+    db.commit()
+    db.close()
+
+    res ={
+      'message': "You send this form successfully!",
+    }
+
+    return res
+
+
+@app.route('/sendOrdForm', method=['OPTIONS', 'POST'])
+@enable_cors
+def sendOrdForm():
+    print "Http Request /sendOrdForm - input :"
+    print "==================================="
+    inputData = request.json
+    print inputData
+    print "==================================="
+    
+    #info = "(" + "'" + inputData['cus_name'] + "'" + "," + "'" +inputData['cus_contact_person'] + "'" + ',' + "'" + inputData['cus_email'] + "'" + ',' + "'" + inputData['cus_phone'] + "'" + ',' + "'" + inputData['cus_address'] + "'" + ',' +  "'" + inputData['cus_region'] + "'" + ',' + inputData['cus_empId'] + ')'
+    #print info
+
+    db = sqlite3.connect('flysheetDb.db')
+    c = db.cursor()
+    c.execute('''INSERT INTO Orders(prod_id,inv_id,amount,priceNTD,ord_date,sub_start_date,sub_end_date,note) VALUES (:ord_prodId,:ord_invId,:ord_amount,:ord_priceNTD,:ord_orderDate,:ord_subStartDate,:ord_subEndDate,:ord_note);''', inputData)
+    #c.execute("INSERT INTO Customer(name,contact_person,email,phone,address,region,sales_person_id) VALUES " + info)
+    db.commit()
+    db.close()
+
+    res ={
+      'message': "You send this form successfully!",
+    }
+
+    return res
+
+
+@app.route('/sendInvForm', method=['OPTIONS', 'POST'])
+@enable_cors
+def sendInvForm():
+    print "Http Request /sendInvForm - input :"
+    print "==================================="
+    inputData = request.json
+    print inputData
+    print "==================================="
+    
+    #info = "(" + "'" + inputData['cus_name'] + "'" + "," + "'" +inputData['cus_contact_person'] + "'" + ',' + "'" + inputData['cus_email'] + "'" + ',' + "'" + inputData['cus_phone'] + "'" + ',' + "'" + inputData['cus_address'] + "'" + ',' +  "'" + inputData['cus_region'] + "'" + ',' + inputData['cus_empId'] + ')'
+    #print info
+
+    db = sqlite3.connect('flysheetDb.db')
+    c = db.cursor()
+    c.execute('''INSERT INTO Invoice(inv_number,cus_id,issued_date,quarter,payment_date,amountUSD,amountNTD,Note) VALUES (:inv_number,:inv_cusId,:inv_issuedDate,:inv_quarter,:inv_paymentDate,:inv_amountUSD,:inv_amountNTD,:inv_note);''', inputData)
+    #c.execute("INSERT INTO Customer(name,contact_person,email,phone,address,region,sales_person_id) VALUES " + info)
+    db.commit()
+    db.close()
+
+    res ={
+      'message': "You send this form successfully!",
+    }
+
+    return res
+
+
 
 @app.route('/runSQL', method=['OPTIONS', 'POST'])
 @enable_cors
