@@ -280,11 +280,15 @@ def runSQL():
         res.update({'success': "You run the statement successfully!"})
         
         if 'select' in inputData['sqlite_text'].lower():
-            result_dict = getResultTable(result)
-            res.update(result_dict)
+            if 'view' in inputData['sqlite_text'].lower():
+                res.update({'notice':"No Results."})
+            else:
+                result_dict = getResultTable(result)
+                res.update(result_dict)          
         else:
             string = "You have made changes to the database. Rows affected: " + str(db.total_changes)
             res.update({'notice': string})
+
         db.commit()
         db.close()
         #getRecords()
